@@ -26,6 +26,5 @@ if __name__ == '__main__':
 
 	coordinateA = get_coordinate(sys.argv[1])
 	coordinateB = get_coordinate(sys.argv[2])
-	print coordinateA, coordinateB
-	print os.system(' '.join(['./size', sys.argv[1], str(coordinateA[0]),
+	os.system(' '.join(['./size', sys.argv[1], str(coordinateA[0]),
 		str(coordinateA[1]), sys.argv[2], str(coordinateB[0]), str(coordinateB[1]), sys.argv[3] ]))

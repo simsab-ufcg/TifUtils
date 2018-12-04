@@ -64,7 +64,7 @@ int main (int argc, char **argv){
     }
     
     for(register int i = 0; i < imageLength; i++){
-        if( TIFFWriteScanline(output, line, i) ){
+        if( TIFFWriteScanline(output, line, i) < 0){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);
@@ -72,8 +72,8 @@ int main (int argc, char **argv){
         }
     }
 
-    int offsetX = fabs((points[0].x - points[1].x) / pixelSize);   
-    int offsetY = fabs((points[0].y - points[1].y) / pixelSize);
+    int offsetX = (points[1].x - points[0].x) / pixelSize;   
+    int offsetY = (points[0].y - points[1].y) / pixelSize;
 
     int inputLength, inputWidth;
 
@@ -82,8 +82,13 @@ int main (int argc, char **argv){
 
     double write_line[imageWidth];
 
-    for(register int i = 0; i < inputLength; i++){
-        if( TIFFReadScanline(input, line, i) < 0 ){
+    cout << offsetX << " " << offsetY << endl;
+
+    for(register int i = max(0, offsetY); i < imageLength; i++){
+        
+        if(inputLength - i - offsetY - 1 <= 0) break;
+
+        if( TIFFReadScanline(input, line, i - offsetY) < 0 ){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);
@@ -97,13 +102,17 @@ int main (int argc, char **argv){
             }
         }
 
-        if( TIFFWriteScanline(output, write_line, i + offsetY) < 0 ){
+        if( TIFFWriteScanline(output, write_line, max(i + offsetY, i)) < 0 ){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);
             exit(4 << 3);
         }
     }
+
+    TIFFClose(input);
+    TIFFClose(normalize);
+    TIFFClose(output);
 
 	return 0;
 }

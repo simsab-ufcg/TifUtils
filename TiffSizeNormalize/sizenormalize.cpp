@@ -57,14 +57,14 @@ int main (int argc, char **argv){
     TIFFSetField(output, TIFFTAG_YRESOLUTION    , 1);
     TIFFSetField(output, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG);
 
-    double line[imageWidth];
+    double write_line[imageWidth];
     
     for(register int i = 0; i < imageWidth; i++){
-        line[i] = NaN;
+        write_line[i] = NaN;
     }
     
     for(register int i = 0; i < imageLength; i++){
-        if( TIFFWriteScanline(output, line, i) < 0){
+        if( TIFFWriteScanline(output, write_line, i) < 0){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);
@@ -72,23 +72,21 @@ int main (int argc, char **argv){
         }
     }
 
-    int offsetX = (points[1].x - points[0].x) / pixelSize;   
-    int offsetY = (points[0].y - points[1].y) / pixelSize;
+    int offsetX = (points[0].x - points[1].x) / pixelSize;   
+    int offsetY = (points[1].y - points[0].y) / pixelSize;
 
     int inputLength, inputWidth;
 
     TIFFGetField(input, TIFFTAG_IMAGEWIDTH  , &inputWidth); 
     TIFFGetField(input, TIFFTAG_IMAGELENGTH , &inputLength);
 
-    double write_line[imageWidth];
+    double read_line[inputWidth];
 
     cout << offsetX << " " << offsetY << endl;
 
-    for(register int i = max(0, offsetY); i < imageLength; i++){
-        
-        if(inputLength - i - offsetY - 1 <= 0) break;
+    for(register int i = max(0, offsetY); i < imageLength && (i - offsetY) < inputLength; i++){
 
-        if( TIFFReadScanline(input, line, i - offsetY) < 0 ){
+        if( TIFFReadScanline(input, read_line, i - offsetY) < 0 ){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);
@@ -98,11 +96,11 @@ int main (int argc, char **argv){
         for(register int j = 0; j < imageWidth; j++){
             write_line[j] = NaN;
             if(j >= offsetX && (j - offsetX) < inputWidth){
-                write_line[j] = line[j - offsetX];
+                write_line[j] = read_line[j - offsetX];
             }
         }
 
-        if( TIFFWriteScanline(output, write_line, max(i + offsetY, i)) < 0 ){
+        if( TIFFWriteScanline(output, write_line, i) < 0 ){
             TIFFClose(input);
             TIFFClose(normalize);
             TIFFClose(output);

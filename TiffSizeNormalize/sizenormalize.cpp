@@ -82,8 +82,6 @@ int main (int argc, char **argv){
 
     double read_line[inputWidth];
 
-    cout << offsetX << " " << offsetY << endl;
-
     for(register int i = max(0, offsetY); i < imageLength && (i - offsetY) < inputLength; i++){
 
         if( TIFFReadScanline(input, read_line, i - offsetY) < 0 ){

@@ -1,4 +1,6 @@
 #include "tiffio.h"
+#include <set>
+#include <math.h>
 #include <iostream>
 #include <fstream>
 
@@ -33,7 +35,7 @@ int main(int argc, char* argv[]){
         }
     }
 
-    printf("%.1lf\n", 1 - 1.0 * distinct.size() / valid);
+    printf("File %s Duplication: %.12lf\n", argv[1], 1 - 1.0 * distinct.size() / valid);
     TIFFClose(tif);
     return 0;
 }

@@ -22,10 +22,10 @@ int main(int argc, char* argv[]) {
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
     
-    int CHUNK_SIZE = atoi(argv[2]);
     double* line = new double[width];
+    long long CHUNK_SIZE = atoll(argv[2]);
 
-    if(CHUNK_SIZE == -1) CHUNK_SIZE = width*height;
+    if(CHUNK_SIZE == -1) CHUNK_SIZE = ((long long) width) * ((long long) height);
 
     double value;
     map<double, bool> elementsInChunk;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     }
 
     printf("File %s\n", argv[1]);
-    printf("Chunk size: %d\nChunks used: %lld\nValid elements: %lld\n", CHUNK_SIZE, noChunks, validElements);
+    printf("Chunk size: %lld\nChunks used: %lld\nValid elements: %lld\n", CHUNK_SIZE, noChunks, validElements);
     printf("Duplication: %.12f\n", 1.0 - ((double) answer) / ((double) validElements));
 
     TIFFClose(tif);

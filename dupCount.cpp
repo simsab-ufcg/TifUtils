@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 
     double* line = new double[width];
     set<double> distinct;
-    int valid = 0;
+    long long valid = 0;
     for(int row = 0; row < height; row++){
         TIFFReadScanline(tif, line, row);
         for(int column = 0; column < width; column++){

@@ -47,11 +47,8 @@ def set_georeference(src_path, base_path, coord_upper_left):
 
 
 if __name__ == '__main__':
-	if len(sys.argv) != 4:
+	if len(sys.argv) != 3:
 		print "Invalid arguments."
 
-	coordinateA = get_coordinate(sys.argv[1])
-	coordinateB = get_coordinate(sys.argv[2])
-	os.system(' '.join(['./size', sys.argv[1], str(coordinateA[0]),
-		str(coordinateA[1]), sys.argv[2], str(coordinateB[0]), str(coordinateB[1]), sys.argv[3] ]))
-	set_georeference(sys.argv[3], sys.argv[2], coordinateB)
+	coordinate = get_coordinate(sys.argv[2])
+	set_georeference(sys.argv[1], sys.argv[2], coordinate)

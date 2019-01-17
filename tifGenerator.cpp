@@ -17,9 +17,13 @@ int main (int argc, char **argv){
 	data = (double*)malloc(sizeof(double) * width);
 	bool totalRandomFlag = false;
 	long long x, y;
-	if(argc >= 4 && (string(argv[3]) == "-R" || string(argv[3]) == "-r"))totalRandomFlag = true;
-	double preRandom[height * 4];
-	for(int i = 0; i < height; i++){
+	double factor = 1.0;
+	if(argc >= 4) 
+		if((string(argv[3]) == "-R" || string(argv[3]) == "-r"))totalRandomFlag = true;
+		else sscanf(argv[3], "%lf", &factor), factor = factor > 1.0 || factor <= 0.0 ? 1.0 : factor;
+	double preRandom[int(height * 4 * factor)];
+	int newSize = height * 4 * factor;
+	for(int i = 0; i < newSize; i++){
 		preRandom[i] = fRand();
 	}
 
@@ -44,7 +48,7 @@ int main (int argc, char **argv){
 
 	for (int row = 0; row < height; row++){
 		for (int colunm = 0; colunm < width; colunm++) {
-			data[colunm] = totalRandomFlag ? fRand() : preRandom[rand() % height];
+			data[colunm] = totalRandomFlag ? fRand() : preRandom[rand() % newSize];
 		}
 		int ret=TIFFWriteScanline(tif, data, row, 0);
 		if (ret==-1){

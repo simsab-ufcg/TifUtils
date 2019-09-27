@@ -50,5 +50,5 @@ if __name__ == '__main__':
 	if len(sys.argv) != 3:
 		print "Invalid arguments."
 
-	coordinate = get_coordinate(sys.argv[2])
-	set_georeference(sys.argv[1], sys.argv[2], coordinate)
+	coordinate = get_coordinate(sys.argv[1])
+	set_georeference(sys.argv[2], sys.argv[1], coordinate)
